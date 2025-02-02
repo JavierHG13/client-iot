@@ -9,6 +9,7 @@ import UserDashboard from './pages/private/User/UserDashboard'
 import AdminDashboard from './pages/private/Admin/AdminDashboard'
 import Productos from './pages/public/Productos'
 import Loader from './components/Common/Loader'
+import Registro from './pages/public/Auth/Register'
 
 const App: React.FC = () => {
   return (
@@ -19,6 +20,7 @@ const App: React.FC = () => {
           <Route element={<PublicLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
             <Route path="/productos" element={<Productos />} />
             <Route path="/loader" element={<Loader/>}/>
           </Route>

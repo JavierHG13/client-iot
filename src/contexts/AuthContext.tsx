@@ -60,7 +60,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   const logout = () => {
     localStorage.removeItem('token')
     setUser(null)
-    navigate('/login')
+    navigate('/')
   }
 
   const hasRole = (requiredRole: User['role']): boolean => {

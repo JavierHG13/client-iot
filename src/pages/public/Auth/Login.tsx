@@ -97,7 +97,7 @@ const Login: React.FC = () => {
                     </Form.Item>
 
                     <div className="login-links">
-                        <Link to="/register">Crear una cuenta</Link>
+                        <Link to="/registro">Crear una cuenta</Link>
                         <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
                     </div>
                 </Form>
