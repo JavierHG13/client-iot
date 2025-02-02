@@ -1,0 +1,91 @@
+.home-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  /* Hero Section */
+  .hero-section {
+    width: 100%;
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #1890ff, #40a9ff);
+    color: white;
+  }
+  
+  .hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  
+  .hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 16px;
+  }
+  
+  .hero-content p {
+    font-size: 1.2rem;
+    margin-bottom: 32px;
+  }
+  
+  .hero-actions .ant-btn {
+    margin: 0 8px;
+  }
+  
+  /* Features Section */
+  .features-section {
+    padding: 64px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  .features-section h2 {
+    font-size: 2rem;
+    margin-bottom: 48px;
+  }
+  
+  .feature-card {
+    height: 100%;
+    text-align: center;
+    border: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .feature-icon {
+    font-size: 48px;
+    color: #1890ff;
+    margin-bottom: 16px;
+  }
+  
+  .feature-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 16px;
+  }
+  
+  .feature-card p {
+    color: #666;
+  }
+  
+  /* CTA Section */
+  .cta-section {
+    width: 100%;
+    padding: 80px 20px;
+    background: #f0f2f5;
+  }
+  
+  .cta-section h2 {
+    font-size: 2rem;
+    margin-bottom: 16px;
+  }
+  
+  .cta-section p {
+    font-size: 1.2rem;
+    margin-bottom: 32px;
+    color: #666;
+  }
+  
