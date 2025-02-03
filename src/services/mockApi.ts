@@ -30,7 +30,7 @@ interface User {
       id: '1',
       name: 'Jaier Hernandez',
       email: '20230077@uthh.edu.mx',
-      role: 'admin',
+      role: 'user',
       password: '123456',
       avatar: 'https://www.shutterstock.com/image-vector/astronaut-dancing-showing-victory-gesture-600nw-2406465085.jpg',
       deviceId: 'iot-123'

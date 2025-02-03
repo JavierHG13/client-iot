@@ -1,22 +1,28 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
-import { Dropdown, Menu,  Avatar, Badge } from 'antd'
+import { Dropdown, Menu, Avatar, Badge, Drawer, Button } from 'antd'
 import {
     UserOutlined,
     SettingOutlined,
     LogoutOutlined,
     DashboardOutlined,
     ShoppingCartOutlined,
+    MenuOutlined,
 } from '@ant-design/icons'
 import './Header.css'
 
 const Header: React.FC = () => {
     const { user, logout, hasRole } = useAuth()
+    const [visible, setVisible] = useState(false) // Estado para controlar el menú hamburguesa
 
-     // Menú desplegable para el perfil del usuario
-     const menu = (
+    // Menú desplegable para el perfil del usuario
+    const profileMenu =  user ? (
         <Menu>
+            <Menu.Item>
+                <span className="user-name">{user.name}</span>
+            </Menu.Item>
+              
             <Menu.Item key="profile" icon={<UserOutlined />}>
                 <NavLink to="/perfil">Perfil</NavLink>
             </Menu.Item>
@@ -37,7 +43,43 @@ const Header: React.FC = () => {
                 Cerrar sesión
             </Menu.Item>
         </Menu>
-    );
+    ): null;
+
+    // Menú para el Drawer (menú hamburguesa)
+    const navMenu = (
+        <Menu mode="vertical">
+            <Menu.Item key="home">
+                <NavLink to="/" onClick={() => setVisible(false)}>
+                    Home
+                </NavLink>
+            </Menu.Item>
+            <Menu.Item key="productos">
+                <NavLink to="/productos" onClick={() => setVisible(false)}>
+                    Productos
+                </NavLink>
+            </Menu.Item>
+            <Menu.Item key="about">
+                <NavLink to="/about" onClick={() => setVisible(false)}>
+                    Sobre Nosotros
+                </NavLink>
+            </Menu.Item>
+            <Menu.Item key="contacto">
+                <NavLink to="/contacto" onClick={() => setVisible(false)}>
+                    Contacto
+                </NavLink>
+            </Menu.Item>
+            <Menu.Item key="servicios">
+                <NavLink to="/servicios" onClick={() => setVisible(false)}>
+                    Servicios
+                </NavLink>
+            </Menu.Item>
+            <Menu.Item key="soporte">
+                <NavLink to="/soporte" onClick={() => setVisible(false)}>
+                    Soporte
+                </NavLink>
+            </Menu.Item>
+        </Menu>
+    )
 
     return (
         <header className="header">
@@ -50,36 +92,76 @@ const Header: React.FC = () => {
                 <NavLink to="/">AquaControl</NavLink>
             </div>
 
-            {/* Navegación principal */}
+            {/* Navegación principal (visible en pantallas grandes) */}
             <nav className="main-nav">
-                <NavLink to="/" className={({ isActive }) => (isActive ? 'active-link' : '')}>Home</NavLink>
-                <NavLink to="/productos" className={({ isActive }) => (isActive ? 'active-link' : '')}>Productos</NavLink>
-                <NavLink to="/about" className={({ isActive }) => (isActive ? 'active-link' : '')}>Sobre Nosotros</NavLink>
-                <NavLink to="/contacto" className={({ isActive }) => (isActive ? 'active-link' : '')}>Contacto</NavLink>
-                <NavLink to="/servicios" className={({ isActive }) => (isActive ? 'active-link' : '')}>Servicios</NavLink>
-                <NavLink to="/soporte" className={({ isActive }) => (isActive ? 'active-link' : '')}>Soporte</NavLink>
+                <NavLink
+                    to="/"
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                >
+                    Home
+                </NavLink>
+                <NavLink
+                    to="/productos"
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                >
+                    Productos
+                </NavLink>
+                <NavLink
+                    to="/about"
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                >
+                    Sobre Nosotros
+                </NavLink>
+                <NavLink
+                    to="/contacto"
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                >
+                    Contacto
+                </NavLink>
+                <NavLink
+                    to="/servicios"
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                >
+                    Servicios
+                </NavLink>
+                <NavLink
+                    to="/soporte"
+                    className={({ isActive }) => (isActive ? 'active-link' : '')}
+                >
+                    Soporte
+                </NavLink>
             </nav>
+
             {/* Acciones de usuario */}
             <div className="user-actions">
-                 {/* Icono de carrito de compras */}
-                 <NavLink to="/carrito" className="cart-icon">
+                {/* Icono de carrito de compras */}
+                <NavLink to="/carrito" className="cart-icon">
                     <Badge count={0} showZero>
-                        <ShoppingCartOutlined style={{ fontSize: '30px', color: 'black' }} />
+                        <ShoppingCartOutlined style={{ fontSize: '24px', color: 'black' }} />
                     </Badge>
                 </NavLink>
-                
 
                 {user ? (
                     <>
+                        {/* Enlace al Dashboard */}
+                        {/*<NavLink
+                            to={hasRole('admin') ? '/admin/dashboard' : '/'}
+                            className={({ isActive }) => (isActive ? 'active-link' : '')}
+                        >
+                            <DashboardOutlined style={{ fontSize: '20px', marginRight: '8px' }} />
+                            {hasRole('admin') ? 'Panel de Admin' : '/'}
+                        </NavLink> */}
+
                         {/* Menú desplegable del perfil */}
-                        <Dropdown overlay={menu} trigger={['click']}>
+
+                        <Dropdown overlay={profileMenu} trigger={['click']}>
                             <div className="profile-dropdown">
                                 <Avatar
                                     src={user.avatar}
                                     icon={<UserOutlined />}
                                     className="user-avatar"
                                 />
-                                <span className="user-name">{user.name}</span>
+                                {/*<span className="user-name">{user.name}</span>*/}
                                 {hasRole('admin') && <span className="role-badge">Admin</span>}
                             </div>
                         </Dropdown>
@@ -92,7 +174,26 @@ const Header: React.FC = () => {
                         Iniciar Sesión
                     </NavLink>
                 )}
+
+                {/* Menú hamburguesa (visible en pantallas pequeñas) */}
+                <Button
+                    type="text"
+                    icon={<MenuOutlined style={{ fontSize: '24px' }} />}
+                    onClick={() => setVisible(true)}
+                    className="menu-toggle"
+                />
             </div>
+
+            {/* Drawer (menú lateral para pantallas pequeñas) */}
+            <Drawer
+                title="Menú"
+                placement="right"
+                onClose={() => setVisible(false)}
+                visible={visible}
+                width={250}
+            >
+                {navMenu}
+            </Drawer>
         </header>
     )
 }

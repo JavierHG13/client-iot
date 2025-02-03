@@ -10,6 +10,9 @@ import AdminDashboard from './pages/private/Admin/AdminDashboard'
 import Productos from './pages/public/Productos'
 import Loader from './components/Common/Loader'
 import Registro from './pages/public/Auth/Register'
+import Contacto from './pages/public/Contacto'
+
+import Verificacion from './pages/public/Auth/Verfificacion'
 
 const App: React.FC = () => {
   return (
@@ -22,7 +25,11 @@ const App: React.FC = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />
             <Route path="/productos" element={<Productos />} />
+         
+            <Route path="/contacto" element={<Contacto/>}/>
+
             <Route path="/loader" element={<Loader/>}/>
+            <Route path="/verificacion" element={<Verificacion/>}/>
           </Route>
 
           {/* Rutas privadas para usuarios */}

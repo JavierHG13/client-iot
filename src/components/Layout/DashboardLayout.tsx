@@ -2,7 +2,7 @@ import React from 'react'
 import { Outlet, Navigate } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import Header from '../Common/Header'
-import Footer from '../Common/Footer'
+import AppFooter from '../Common/Footer'
 
 interface DashboardLayoutProps {
   requiredRole: 'user' | 'admin' | 'employee' | 'owner'
@@ -26,7 +26,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ requiredRole }) => {
       <main className="dashboard-content">
         <Outlet /> {/* Aquí se renderizan las rutas privadas */}
       </main>
-      <Footer />
+      <AppFooter />
     </div>
   )
 }

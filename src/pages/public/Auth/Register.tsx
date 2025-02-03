@@ -1,31 +1,42 @@
 import React, { useState } from 'react'
 import { Form, Input, Button, Select, message } from 'antd'
-import { UserOutlined, MailOutlined, LockOutlined } from '@ant-design/icons'
+import { UserOutlined, MailOutlined, LockOutlined, PhoneOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
+
 import './Register.css'
 
 const { Option } = Select
+
+interface User{
+    nombre:string,
+    apellidos: string,
+    correo:string,
+    telefono:number,
+    password:string
+}
 
 const Registro: React.FC = () => {
     const [form] = Form.useForm()
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
-    const onFinish = async (values: any) => {
+    const onFinish = async (values: User) => {
 
         setLoading(true)
         try {
-            // Simular una llamada a la API
-            console.log('Datos del formulario:', values)
-            await new Promise((resolve) => setTimeout(resolve, 1000)) // Simular delay de red
+            
+            const data = await axios.post('http://localhost:3000/api/register', values)
 
-            // Mostrar mensaje de éxito
+            console.log(data.data)
+
             message.success('Registro exitoso! Redirigiendo...')
 
-            // Redirigir al usuario después del registro
-            setTimeout(() => {
-                navigate('/dashboard')
-            }, 1500)
+            // Redirigir a la vista de verificación con el código y el correo
+            navigate("/verificacion", {
+                //state: {  email },
+            });
+
         } catch (error) {
             console.log(error)
             message.error('Error al registrar. Inténtelo de nuevo.')
@@ -38,7 +49,7 @@ const Registro: React.FC = () => {
         <div className="registro-page">
             <div className="registro-card">
                 <h1>Regístrate</h1>
-                
+
                 <Form
                     form={form}
                     name="registro"
@@ -55,7 +66,19 @@ const Registro: React.FC = () => {
                             { min: 3, message: 'El nombre debe tener al menos 3 caracteres' },
                         ]}
                     >
-                        <Input prefix={<UserOutlined />} placeholder="Juan Pérez" />
+                        <Input prefix={<UserOutlined />} placeholder="Javier" />
+                    </Form.Item>
+
+                     {/* Apellidos */}
+                     <Form.Item
+                        name="apellidos"
+                        label="Apellidos"
+                        rules={[
+                            { required: true, message: 'Por favor ingrese su apellido' },
+                            { min: 10, message: 'El apellido debe tener al menos 5 caracteres' },
+                        ]}
+                    >
+                        <Input prefix={<UserOutlined />} placeholder="Hernandez" />
                     </Form.Item>
 
                     {/* Correo electrónico */}
@@ -68,6 +91,19 @@ const Registro: React.FC = () => {
                         ]}
                     >
                         <Input prefix={<MailOutlined />} placeholder="correo@ejemplo.com" />
+                    </Form.Item>
+
+                     {/* Correo electrónico */}
+                     <Form.Item
+                        name="telefono"
+                        label="Telefono"
+                        rules={[
+                            { required: true, message: 'Por favor ingrese su telefono' },
+                            { min: 10, message: 'El telefono minimo 10 numeros' },
+                        ]}
+                    >
+                        
+                        <Input prefix={<PhoneOutlined />} placeholder="" />
                     </Form.Item>
 
                     {/* Contraseña */}
@@ -102,18 +138,6 @@ const Registro: React.FC = () => {
                         hasFeedback
                     >
                         <Input.Password prefix={<LockOutlined />} placeholder="••••••••" />
-                    </Form.Item>
-
-                    {/* Rol (opcional) */}
-                    <Form.Item
-                        name="rol"
-                        label="Rol"
-                        rules={[{ required: true, message: 'Por favor seleccione un rol' }]}
-                    >
-                        <Select placeholder="Seleccione su rol">
-                            <Option value="user">Usuario</Option>
-                            <Option value="admin">Administrador</Option>
-                        </Select>
                     </Form.Item>
 
                     {/* Botón de registro */}

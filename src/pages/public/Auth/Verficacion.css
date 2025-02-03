@@ -1,0 +1,36 @@
+.verificacion-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f0f2f5;
+    padding: 24px;
+  }
+  
+  .verificacion-card {
+    background: white;
+    padding: 32px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+  }
+  
+  .verificacion-title {
+    color: #1890ff;
+    margin-bottom: 16px;
+  }
+  
+  .verificacion-subtitle {
+    display: block;
+    margin-bottom: 24px;
+    color: #666;
+  }
+  
+  .verificacion-nota {
+    display: block;
+    margin-top: 16px;
+    color: #999;
+    font-size: 0.9rem;
+  }

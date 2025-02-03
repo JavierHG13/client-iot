@@ -1,7 +1,7 @@
 import React from 'react'
 import { Outlet } from 'react-router-dom'
 import Header from '../Common/Header'
-import Footer from '../Common/Footer'
+import AppFooter from '../Common/Footer'
 
 const PublicLayout: React.FC = () => {
     return (
@@ -13,7 +13,7 @@ const PublicLayout: React.FC = () => {
                 <Outlet />
             </main>
 
-            <Footer />
+            <AppFooter />
 
         </div>
     )
