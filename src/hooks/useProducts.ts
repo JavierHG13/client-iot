@@ -9,7 +9,7 @@ interface Product {
     stock: number
     category: string
     image: string
-}
+} 
 
 const useProducts = () => {
     const [products, setProducts] = useState<Product[]>([])

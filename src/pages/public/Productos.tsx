@@ -1,6 +1,13 @@
 import React, { useState } from 'react'
 import { Input, Select, Card, Row, Col, Pagination, Button } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
+import useProducts from '../../hooks/useProducts'
+
+//Importaciones para mostrarlo mientras carga
+import Header from '../../components/Common/Header'
+import Loader from '../../components/Common/Loader'
+import AppFooter from '../../components/Common/Footer'
+
 import './Productos.css'
 
 const { Search } = Input
@@ -88,7 +95,7 @@ const mockProducts: Product[] = [
     category: 'Filtros',
     image: 'https://via.placeholder.com/150',
   },
-  // Agrega más productos aquí...
+
 ]
 
 const Productos: React.FC = () => {
@@ -113,6 +120,17 @@ const Productos: React.FC = () => {
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   )
+
+  const { loading } = useProducts();
+
+  if (loading) {
+    return (
+      //<Loader />
+      <div>
+        <p>Cargando productos....</p>
+      </div>
+    );
+  }
 
   return (
     <div className="productos-page">

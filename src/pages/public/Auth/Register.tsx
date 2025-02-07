@@ -1,19 +1,18 @@
 import React, { useState } from 'react'
-import { Form, Input, Button, Select, message } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 import { UserOutlined, MailOutlined, LockOutlined, PhoneOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 import './Register.css'
 
-const { Option } = Select
 
-interface User{
-    nombre:string,
+interface User {
+    nombre: string,
     apellidos: string,
-    correo:string,
-    telefono:number,
-    password:string
+    correo: string,
+    telefono: number,
+    password: string
 }
 
 const Registro: React.FC = () => {
@@ -25,10 +24,10 @@ const Registro: React.FC = () => {
 
         setLoading(true)
         try {
-            
-            const data = await axios.post('http://localhost:3000/api/register', values)
 
-            console.log(data.data)
+            const response = await axios.post('http://localhost:3000/api/register', values)
+
+            console.log(response.data)
 
             message.success('Registro exitoso! Redirigiendo...')
 
@@ -38,12 +37,27 @@ const Registro: React.FC = () => {
             });
 
         } catch (error) {
-            console.log(error)
-            message.error('Error al registrar. Inténtelo de nuevo.')
+            if (axios.isAxiosError(error)) {
+                
+                console.log(error.response?.data)
+                // Manejar errores de Axios
+                if (error.response) {
+                    // Mostrar el mensaje de error del backend
+                    message.error(error.response.data.message);
+
+                    message.error("Error de conexión. Inténtalo de nuevo.");
+                }
+            } else {
+                // Error desconocido
+                message.error("Error inesperado. Inténtalo de nuevo.");
+            }
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
+
+
+
 
     return (
         <div className="registro-page">
@@ -69,8 +83,8 @@ const Registro: React.FC = () => {
                         <Input prefix={<UserOutlined />} placeholder="Javier" />
                     </Form.Item>
 
-                     {/* Apellidos */}
-                     <Form.Item
+                    {/* Apellidos */}
+                    <Form.Item
                         name="apellidos"
                         label="Apellidos"
                         rules={[
@@ -93,8 +107,8 @@ const Registro: React.FC = () => {
                         <Input prefix={<MailOutlined />} placeholder="correo@ejemplo.com" />
                     </Form.Item>
 
-                     {/* Correo electrónico */}
-                     <Form.Item
+                    {/* Correo electrónico */}
+                    <Form.Item
                         name="telefono"
                         label="Telefono"
                         rules={[
@@ -102,7 +116,7 @@ const Registro: React.FC = () => {
                             { min: 10, message: 'El telefono minimo 10 numeros' },
                         ]}
                     >
-                        
+
                         <Input prefix={<PhoneOutlined />} placeholder="" />
                     </Form.Item>
 
@@ -111,12 +125,23 @@ const Registro: React.FC = () => {
                         name="password"
                         label="Contraseña"
                         rules={[
-                            { required: true, message: 'Por favor ingrese su contraseña' },
-                            { min: 6, message: 'La contraseña debe tener al menos 6 caracteres' },
+                            { required: true, message: "Por favor ingrese su contraseña" },
+                            { min: 6, message: "La contraseña debe tener al menos 6 caracteres" },
+                            {
+                                validator: (_, value) => {
+                                    const errores = [];
+                                    if (!/[A-Z]/.test(value)) errores.push("Debe contener al menos una mayúscula");
+                                    if (!/[a-z]/.test(value)) errores.push("Debe contener al menos una minúscula");
+                                    if (!/[!@#$%^&*]/.test(value)) errores.push("Debe contener al menos un carácter especial (@$!%*?&)");
+                                    
+                                    return errores.length > 0 ? Promise.reject(errores) : Promise.resolve();
+                                },
+                            },
                         ]}
                         hasFeedback
                     >
                         <Input.Password prefix={<LockOutlined />} placeholder="••••••••" />
+
                     </Form.Item>
 
                     {/* Confirmar contraseña */}

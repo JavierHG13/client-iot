@@ -1,83 +1,111 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { useNavigate } from 'react-router-dom'
-//import api from '../services/api/auth'
-import mockApi from '../services/mockApi'
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { useNavigate } from "react-router-dom";
+import { message } from "antd";
+import api from "../services/axios";
 
 interface User {
-    id: string
-    name: string
-    email: string
-    role: 'user' | 'admin' | 'employee' | 'owner'
-    password: string
-    avatar?: string
-    deviceId?: string
-  }
+    id: string;
+    nombre: string;
+    apellidos: string;
+    email: string;
+    rol: "cliente" | "admin" | "empleado" | "propietario"; 
+    avatar?: string;
+}
+
 
 interface AuthContextValue {
-  user: User | null
-  loading: boolean
-  login: (credentials: { email: string; password: string }) => Promise<void>
-  logout: () => void
-  hasRole: (requiredRole: User['role']) => boolean
+    user: User | null;
+    loading: boolean;
+    login: (credentials: { email: string; password: string }) => Promise<void>;
+    logout: () => void;
+    hasRole: (requiredRole: User["rol"]) => boolean;
 }
 
-const AuthContext = createContext<AuthContextValue | undefined>(undefined)
+const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
-  const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+    const [user, setUser] = useState<User | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const token = localStorage.getItem('token')
+    // Verificar autenticación al cargar la aplicación
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const response = await api.get("/verify");
+                setUser({
+                    id: response.data.id,
+                    nombre: response.data.nombre,
+                    apellidos: response.data.apellidos,
+                    email: response.data.email,
+                    rol: response.data.rol,
+                    avatar: response.data.avatar,
+                });
+            } catch (error) {
+                console.error("Error al verificar autenticación:", error);
+                setUser(null);
+            }
+            setLoading(false); // Marcar como completado
+        };
 
-      console.log(token)
+        checkAuth();
+    }, []);
 
-      if (token) {
+    // Función para iniciar sesión
+    const login = async (credentials: { email: string; password: string }) => {
+        setLoading(true);
         try {
-          const user = await mockApi.auth.me()
-          
-          setUser(user)
-        } catch (error) {
-        console.log('Error al verificar la autenticación:', error)
-          logout()
+            const response = await api.post("/login", credentials);
+            setUser({
+                id: response.data.id,
+                nombre: response.data.nombre,
+                apellidos: response.data.apellidos,
+                email: response.data.email,
+                rol: response.data.rol,
+                avatar: response.data.avatar,
+            });
+            // Redirigir según el rol
+            navigate(response.data.rol === "admin" ? "/admin/dashboard" : "/dashboard");
+            message.success("Inicio de sesión exitoso!");
+        } catch (error: any) {
+            
+            console.error("Error al iniciar sesión:", error);
+            message.error(error.response?.data.message || "Error al iniciar sesión");
+        } finally {
+            setLoading(false);
         }
-      }
-      setLoading(false)
-    }
-    checkAuth()
-  }, [])
+    };
 
-  const login = async (credentials: { email: string; password: string }) => {
+    // Función para cerrar sesión
+    const logout = async ():Promise<void> => {
+        try {
+            await api.post("/logout");
+            setUser(null);
+            navigate("/login");
+        } catch (error) {
+            console.error("Error al cerrar sesión:", error);
+        }
+    };
 
-    const { token, user } = await mockApi.auth.login(credentials)
-    localStorage.setItem('token', token)
-    setUser(user)
-    navigate(user.role === 'admin' ? '/admin/dashboard' : '/dashboard')
-  }
+    // Función para verificar si el usuario tiene un rol específico
+    const hasRole = (requiredRole: User["rol"]): boolean => {
+        return user?.rol === requiredRole;
+    };
 
-  const logout = () => {
-    localStorage.removeItem('token')
-    setUser(null)
-    navigate('/')
-  }
+    return (
+        <AuthContext.Provider value={{ user, loading, login, logout, hasRole }}>
+            {children}
+        </AuthContext.Provider>
+    );
+};
 
-  const hasRole = (requiredRole: User['role']): boolean => {
-    return user?.role === requiredRole
-  }
-
-  return (
-    <AuthContext.Provider value={{ user, loading, login, logout, hasRole }}>
-      {children}
-    </AuthContext.Provider>
-  )
-}
-
+// Hook para usar el contexto de autenticación
 export const useAuth = (): AuthContextValue => {
-  const context = useContext(AuthContext)
-  if (!context) {
-    throw new Error('useAuth debe usarse dentro de un AuthProvider')
-  }
-  return context
-}
+
+    const context = useContext(AuthContext);
+    
+    if (!context) {
+        throw new Error("useAuth debe usarse dentro de un AuthProvider");
+    }
+    return context;
+};

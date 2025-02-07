@@ -1,0 +1,119 @@
+.about-page {
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Título principal */
+.about-page h1 {
+  font-size: 3rem;
+  margin-bottom: 40px;
+  color: #1890ff;
+  font-weight: bold;
+  position: relative;
+}
+
+/* Línea decorativa debajo del título */
+.about-page h1::after {
+  content: "";
+  display: block;
+  width: 80px;
+  height: 4px;
+  background: #1890ff;
+  margin: 8px auto 0;
+  border-radius: 2px;
+}
+
+/* Contenedor principal */
+.about-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Secciones */
+.info-section,
+.form-section {
+  flex: 1;
+  min-width: 320px;
+  max-width: 550px;
+  padding: 24px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  transition: transform 0.3s ease-in-out;
+}
+
+.info-section:hover,
+.form-section:hover {
+  transform: translateY(-5px);
+}
+
+/* Títulos de las secciones */
+.info-section h2,
+.form-section h2 {
+  font-size: 2rem;
+  margin-bottom: 16px;
+  color: #333;
+  position: relative;
+}
+
+/* Línea decorativa en los títulos */
+.info-section h2::after,
+.form-section h2::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: #1890ff;
+  margin: 6px 0;
+  border-radius: 2px;
+}
+
+/* Listas de valores */
+.about-values ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about-values li {
+  font-size: 1.2rem;
+  padding: 12px;
+  border-left: 4px solid #1890ff;
+  margin-bottom: 10px;
+  background: #f0f7ff;
+  border-radius: 6px;
+  transition: background 0.3s ease-in-out;
+}
+
+.about-values li:hover {
+  background: #e0efff;
+}
+
+/* Sección del equipo */
+.about-team p {
+  font-size: 1.1rem;
+  color: #555;
+}
+
+/* Diseño responsivo */
+@media (max-width: 768px) {
+  .about-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .info-section,
+  .form-section {
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .about-page h1 {
+    font-size: 2.5rem;
+  }
+}

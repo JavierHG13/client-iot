@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useAuth } from '../../contexts/AuthContext'
 import { Dropdown, Menu, Avatar, Badge, Drawer, Button } from 'antd'
+
 import {
     UserOutlined,
     SettingOutlined,
@@ -9,27 +10,30 @@ import {
     DashboardOutlined,
     ShoppingCartOutlined,
     MenuOutlined,
+    
 } from '@ant-design/icons'
 import './Header.css'
 
 const Header: React.FC = () => {
+
+    const [visible, setVisible] = useState<boolean>(false) // Estado para controlar el menú hamburguesa
     const { user, logout, hasRole } = useAuth()
-    const [visible, setVisible] = useState(false) // Estado para controlar el menú hamburguesa
+
 
     // Menú desplegable para el perfil del usuario
-    const profileMenu =  user ? (
+    const profileMenu = user ? (
         <Menu>
             <Menu.Item>
-                <span className="user-name">{user.name}</span>
+                <span className="user-name">{user.nombre} {user.apellidos}</span>
             </Menu.Item>
-              
+
             <Menu.Item key="profile" icon={<UserOutlined />}>
                 <NavLink to="/perfil">Perfil</NavLink>
             </Menu.Item>
             <Menu.Item key="settings" icon={<SettingOutlined />}>
                 <NavLink to="/configuracion">Configuración</NavLink>
             </Menu.Item>
-            {hasRole('user') && (
+            {hasRole('cliente') && (
                 <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
                     <NavLink to="/dashboard">Dashboard</NavLink>
                 </Menu.Item>
@@ -43,7 +47,7 @@ const Header: React.FC = () => {
                 Cerrar sesión
             </Menu.Item>
         </Menu>
-    ): null;
+    ) : null;
 
     // Menú para el Drawer (menú hamburguesa)
     const navMenu = (
@@ -143,17 +147,6 @@ const Header: React.FC = () => {
 
                 {user ? (
                     <>
-                        {/* Enlace al Dashboard */}
-                        {/*<NavLink
-                            to={hasRole('admin') ? '/admin/dashboard' : '/'}
-                            className={({ isActive }) => (isActive ? 'active-link' : '')}
-                        >
-                            <DashboardOutlined style={{ fontSize: '20px', marginRight: '8px' }} />
-                            {hasRole('admin') ? 'Panel de Admin' : '/'}
-                        </NavLink> */}
-
-                        {/* Menú desplegable del perfil */}
-
                         <Dropdown overlay={profileMenu} trigger={['click']}>
                             <div className="profile-dropdown">
                                 <Avatar
@@ -164,8 +157,10 @@ const Header: React.FC = () => {
                                 {/*<span className="user-name">{user.name}</span>*/}
                                 {hasRole('admin') && <span className="role-badge">Admin</span>}
                             </div>
-                        </Dropdown>
+                        </Dropdown >
                     </>
+
+                    
                 ) : (
                     <NavLink
                         to="/login"

@@ -82,7 +82,7 @@ interface User {
       me: (): Promise<User> => {
         return new Promise((resolve, reject) => {
           setTimeout(() => {
-            const token = localStorage.getItem('token')
+            const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YTAzZjQ0NTVmODg1ZGY4MTU0Y2QwYyIsImlhdCI6MTczODU2MjQ1NSwiZXhwIjoxNzM4NjQ4ODU1fQ.pCEsBINJyyRgbDt0WuP8uJmmujbJ8f-ZMs521BA1jts"
             if (token) {
               const user = mockUsers[0] // Simular usuario logueado
               resolve(user)

@@ -1,0 +1,41 @@
+.iot-status-card {
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: #fff;
+}
+
+.status-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.status-icon {
+  font-size: 24px;
+  color: #1890ff;
+}
+
+.sensor-data {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.data-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.data-icon {
+  font-size: 24px;
+  color: #52c41a;
+}
+
+.temp-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}

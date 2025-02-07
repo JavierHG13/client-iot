@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../../contexts/AuthContext'
 import { Form, Input, Button, Alert, Typography } from 'antd'
 import { LockOutlined, MailOutlined } from '@ant-design/icons'
@@ -13,18 +13,25 @@ interface LoginValues {
 }
 
 const Login: React.FC = () => {
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading,] = useState(false)
     const [error, setError] = useState<string | null>(null)
-    const { login } = useAuth()
-    const navigate = useNavigate()
+    const { login, user } = useAuth()
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        if (user) {
+          navigate("/dashboard");
+        }
+      }, [user, navigate]);
 
     const onFinish = async (values: LoginValues) => {
         setLoading(true)
         setError(null)
 
         try {
-            await login(values)
-            navigate('/dashboard')
+            await login(values);
+            
         } catch (err) {
             console.log(err)
             setError('Credenciales incorrectas. Por favor, inténtelo de nuevo.')
