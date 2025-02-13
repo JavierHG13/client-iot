@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react'
-import mockApi from '../services/mockApi'
+import api from '../services/axios'
 
 interface Product {
-    id: string
-    name: string
-    description: string
-    price: number
+    _id: string
+    nombre: string
+    descripcion: string
+    precio: number
     stock: number
-    category: string
-    image: string
+    categoria: string
+    imagen: string[]
+    disponible: boolean
 } 
 
 const useProducts = () => {
@@ -17,10 +18,14 @@ const useProducts = () => {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
+
         const fetchProducts = async () => {
             try {
-                const data = await mockApi.products.getAll()
-                
+                const response = await api.get('/productos');
+
+                const data = response.data;
+                //console.log(data);
+
                 setProducts(data)
             } catch (err) {
                 console.log('Error al cargar los productos:', err)
@@ -35,7 +40,8 @@ const useProducts = () => {
 
     const getProductById = async (id: string): Promise<Product | null> => {
         try {
-            return await mockApi.products.getById(id)
+            return await api.get(`/productos/${id}`)
+
         } catch (err) {
             console.log("Error al cargar el producto:", err)
             setError('Producto no encontrado')

@@ -1,11 +1,17 @@
 import React from "react";
+import AnimatedPage from "./AnimatedPage";
+
 import "./Loader.css";
 
 const Loader: React.FC = () => {
   return (
-    <div className="loader-container">
-      <div className="loader"></div>
-    </div>
+    <AnimatedPage disableAnimation={true}>
+
+      <div className="loader-container">
+        <div className="loader"></div>
+      </div>
+      
+    </AnimatedPage>
   );
 };
 

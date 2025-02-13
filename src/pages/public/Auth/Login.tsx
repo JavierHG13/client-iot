@@ -8,109 +8,123 @@ import './Login.css'
 const { Title } = Typography
 
 interface LoginValues {
-    email: string
-    password: string
+	email: string
+	password: string
 }
 
 const Login: React.FC = () => {
-    const [loading, setLoading,] = useState(false)
-    const [error, setError] = useState<string | null>(null)
-    const { login, user } = useAuth()
-    const navigate = useNavigate();
+
+	const [error, setError] = useState<string | null>(null)
+	const { login, user, loading } = useAuth()
+	const navigate = useNavigate();
 
 
-    useEffect(() => {
-        if (user) {
-          navigate("/dashboard");
-        }
-      }, [user, navigate]);
+	//Si el usuario ya esta logead, redirigir a la página de dashboard
+	useEffect(() => {
+		if (user) {
+			navigate("/dashboard");
+		}
+	}, [user, navigate]);
 
-    const onFinish = async (values: LoginValues) => {
-        setLoading(true)
-        setError(null)
 
-        try {
-            await login(values);
-            
-        } catch (err) {
-            console.log(err)
-            setError('Credenciales incorrectas. Por favor, inténtelo de nuevo.')
-            setLoading(false)
-        }
-    }
+	//Función para iniciar sesión
+	const onFinish = async (values: LoginValues) => {
+		setError(null);
 
-    return (
-        <div className="login-container">
-            <div className="login-card">
-                <Title level={2} className="login-title">
-                    Iniciar Sesión
-                </Title>
+		try {
+			await login(values);
 
-                {error && (
-                    <Alert
-                        message={error}
-                        type="error"
-                        showIcon
-                        style={{ marginBottom: 24 }}
-                    />
-                )}
+		} catch (err) {
 
-                <Form
-                    name="login"
-                    initialValues={{ remember: true }}
-                    onFinish={onFinish}
-                    layout="vertical"
-                >
-                    <Form.Item
-                        name="email"
-                        label="Correo Electrónico"
-                        rules={[
-                            { required: true, message: 'Por favor ingrese su correo' },
-                            { type: 'email', message: 'Ingrese un correo válido' }
-                        ]}
-                    >
-                        <Input
-                            prefix={<MailOutlined />}
-                            placeholder="correo@ejemplo.com"
-                            size="large"
-                        />
-                    </Form.Item>
+			console.log(err);
+			setError(/*err.response?.data.message ||*/ 'Credenciales incorrectas. Por favor, inténtelo de nuevo.');
+			//message.error(err.response?.data.message || 'Error al iniciar sesión');
+		}
+	};
 
-                    <Form.Item
-                        name="password"
-                        label="Contraseña"
-                        rules={[
-                            { required: true, message: 'Por favor ingrese su contraseña' },
-                            { min: 6, message: 'La contraseña debe tener al menos 6 caracteres' }
-                        ]}
-                    >
-                        <Input.Password
-                            prefix={<LockOutlined />}
-                            placeholder="••••••••"
-                            size="large"
-                        />
-                    </Form.Item>
+	//Funcion para limpiar errores
+	useEffect(() => {
+		if (error) {
+			const timer = setTimeout(() => {
+				setError(null);
+			}, 5000);
 
-                    <Form.Item>
-                        <Button
-                            type="primary"
-                            htmlType="submit"
-                            size="large"
-                            loading={loading}
-                            block
-                        >
-                            Iniciar Sesión
-                        </Button>
-                    </Form.Item>
+			return () => clearTimeout(timer); //Limpiar el temporizador si el componente se desmonta
+		}
+	}, [error]);
 
-                    <div className="login-links">
-                        <Link to="/registro">Crear una cuenta</Link>
-                        <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
-                    </div>
-                </Form>
-            </div>
-        </div>
-    )
+	return (
+		<div className="login-container">
+			<div className="login-card">
+				<Title level={2} className="login-title">
+					Iniciar Sesión
+				</Title>
+
+				{error && (
+					<Alert
+						message={error}
+						type="error"
+						showIcon
+						style={{ marginBottom: 24 }}
+					/>
+				)}
+
+				<Form
+					name="login"
+					initialValues={{ remember: true }}
+					onFinish={onFinish}
+					layout="vertical"
+				>
+					<Form.Item
+						name="email"
+						label="Correo Electrónico"
+						rules={[
+							{ required: true, message: 'Por favor ingrese su correo' },
+							{ type: 'email', message: 'Ingrese un correo válido' }
+						]}
+					>
+						<Input
+							prefix={<MailOutlined />}
+							placeholder="correo@ejemplo.com"
+							size="large"
+						/>
+					</Form.Item>
+
+					<Form.Item
+						name="password"
+						label="Contraseña"
+						rules={[
+							{ required: true, message: 'Por favor ingrese su contraseña' },
+							{ min: 6, message: 'La contraseña debe tener al menos 6 caracteres' }
+						]}
+					>
+						<Input.Password
+							prefix={<LockOutlined />}
+							placeholder="••••••••"
+							size="large"
+						/>
+					</Form.Item>
+
+					<Form.Item>
+						<Button
+							type="primary"
+							htmlType="submit"
+							size="large"
+							loading={loading}
+							block
+						>
+							Iniciar Sesión
+						</Button>
+					</Form.Item>
+
+					<div className="login-links">
+						<Link to="/registro">Crear una cuenta</Link>
+						<Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>
+					</div>
+				</Form>
+			</div>
+		</div>
+	)
 }
 
 export default Login

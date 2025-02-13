@@ -2,6 +2,7 @@ import React from 'react'
 import { Outlet } from 'react-router-dom'
 import Header from '../Common/Header'
 import AppFooter from '../Common/Footer'
+import AnimatedPage from '../Common/AnimatedPage'
 
 const PublicLayout: React.FC = () => {
     return (
@@ -10,7 +11,9 @@ const PublicLayout: React.FC = () => {
             <Header />
 
             <main className="content">
-                <Outlet />
+                <AnimatedPage>
+                    <Outlet />
+                </AnimatedPage>
             </main>
 
             <AppFooter />

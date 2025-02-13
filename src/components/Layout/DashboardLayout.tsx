@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import Header from '../Common/Header'
 import AppFooter from '../Common/Footer'
 import Loader from '../Common/Loader'
+import AnimatedPage from '../Common/AnimatedPage'
 
 interface DashboardLayoutProps {
   requiredRole: 'cliente' | 'admin'
@@ -39,7 +40,9 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ requiredRole }) => {
     <div className="dashboard-layout">
       <Header />
       <main className="dashboard-content">
-        <Outlet /> {/* Renderizar las vistas */}
+        <AnimatedPage>
+          <Outlet /> {/* Renderizar las vistas */}
+        </AnimatedPage>
       </main>
       <AppFooter />
     </div>

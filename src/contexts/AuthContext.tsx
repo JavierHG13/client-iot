@@ -8,7 +8,7 @@ interface User {
     nombre: string;
     apellidos: string;
     email: string;
-    rol: "cliente" | "admin" | "empleado" | "propietario"; 
+    rol: "cliente" | "admin" | "empleado" | "propietario";
     avatar?: string;
 }
 
@@ -32,7 +32,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const response = await api.get("/verify");
+                const response = await api.get("/auth/verify");
                 setUser({
                     id: response.data.id,
                     nombre: response.data.nombre,
@@ -52,10 +52,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }, []);
 
     // Función para iniciar sesión
-    const login = async (credentials: { email: string; password: string }) => {
+    const login = async (credentials: { email: string; password: string }): Promise<void> => {
         setLoading(true);
         try {
-            const response = await api.post("/login", credentials);
+            const response = await api.post("/auth/login", credentials);
             setUser({
                 id: response.data.id,
                 nombre: response.data.nombre,
@@ -64,22 +64,20 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
                 rol: response.data.rol,
                 avatar: response.data.avatar,
             });
-            // Redirigir según el rol
+
             navigate(response.data.rol === "admin" ? "/admin/dashboard" : "/dashboard");
             message.success("Inicio de sesión exitoso!");
-        } catch (error: any) {
             
-            console.error("Error al iniciar sesión:", error);
-            message.error(error.response?.data.message || "Error al iniciar sesión");
-        } finally {
+       } finally {
             setLoading(false);
         }
     };
 
+
     // Función para cerrar sesión
-    const logout = async ():Promise<void> => {
+    const logout = async (): Promise<void> => {
         try {
-            await api.post("/logout");
+            await api.post("/auth/logout");
             setUser(null);
             navigate("/login");
         } catch (error) {
@@ -103,7 +101,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 export const useAuth = (): AuthContextValue => {
 
     const context = useContext(AuthContext);
-    
+
     if (!context) {
         throw new Error("useAuth debe usarse dentro de un AuthProvider");
     }

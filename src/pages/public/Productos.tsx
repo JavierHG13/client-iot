@@ -2,138 +2,49 @@ import React, { useState } from 'react'
 import { Input, Select, Card, Row, Col, Pagination, Button } from 'antd'
 import { SearchOutlined } from '@ant-design/icons'
 import useProducts from '../../hooks/useProducts'
-
-//Importaciones para mostrarlo mientras carga
-import Header from '../../components/Common/Header'
 import Loader from '../../components/Common/Loader'
-import AppFooter from '../../components/Common/Footer'
 
 import './Productos.css'
 
 const { Search } = Input
 const { Option } = Select
 
-interface Product {
-  id: string
-  name: string
-  description: string
-  price: number
-  category: string
-  image: string
-}
-
-const mockProducts: Product[] = [
-  {
-    id: '1',
-    name: 'Sensor de Temperatura',
-    description: 'Sensor preciso para monitorear la temperatura del agua.',
-    price: 29.99,
-    category: 'Sensores',
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTr93xVYUCzrhgZN7k8fJ9w_TTKxGFD3PCzemwsfQgZKjii7TLm9gSPjimXEtzOr4KlTets97Oe4x-rHnnc3Hy29EM1L0YDU5pqJuT-U9ZtrbIewVpQVRrZTQ&usqp=CAE',
-  },
-  {
-    id: '2',
-    name: 'Bomba de Agua',
-    description: 'Bomba eficiente para mantener el flujo de agua en tu acuario.',
-    price: 49.99,
-    category: 'Bombas',
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTr93xVYUCzrhgZN7k8fJ9w_TTKxGFD3PCzemwsfQgZKjii7TLm9gSPjimXEtzOr4KlTets97Oe4x-rHnnc3Hy29EM1L0YDU5pqJuT-U9ZtrbIewVpQVRrZTQ&usqp=CAE',
-  },
-  {
-    id: '3',
-    name: 'Filtro Biológico',
-    description: 'Filtro que mantiene el agua limpia y libre de impurezas.',
-    price: 39.99,
-    category: 'Filtros',
-    image: 'https://via.placeholder.com/150',
-  },
-  {
-    id: '1',
-    name: 'Sensor de Temperatura',
-    description: 'Sensor preciso para monitorear la temperatura del agua.',
-    price: 29.99,
-    category: 'Sensores',
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTr93xVYUCzrhgZN7k8fJ9w_TTKxGFD3PCzemwsfQgZKjii7TLm9gSPjimXEtzOr4KlTets97Oe4x-rHnnc3Hy29EM1L0YDU5pqJuT-U9ZtrbIewVpQVRrZTQ&usqp=CAE',
-  },
-  {
-    id: '2',
-    name: 'Bomba de Agua',
-    description: 'Bomba eficiente para mantener el flujo de agua en tu acuario.',
-    price: 49.99,
-    category: 'Bombas',
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTr93xVYUCzrhgZN7k8fJ9w_TTKxGFD3PCzemwsfQgZKjii7TLm9gSPjimXEtzOr4KlTets97Oe4x-rHnnc3Hy29EM1L0YDU5pqJuT-U9ZtrbIewVpQVRrZTQ&usqp=CAE',
-  },
-  {
-    id: '3',
-    name: 'Filtro Biológico',
-    description: 'Filtro que mantiene el agua limpia y libre de impurezas.',
-    price: 39.99,
-    category: 'Filtros',
-    image: 'https://via.placeholder.com/150',
-  },
-  {
-    id: '1',
-    name: 'Sensor de Temperatura',
-    description: 'Sensor preciso para monitorear la temperatura del agua.',
-    price: 29.99,
-    category: 'Sensores',
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTr93xVYUCzrhgZN7k8fJ9w_TTKxGFD3PCzemwsfQgZKjii7TLm9gSPjimXEtzOr4KlTets97Oe4x-rHnnc3Hy29EM1L0YDU5pqJuT-U9ZtrbIewVpQVRrZTQ&usqp=CAE',
-  },
-  {
-    id: '2',
-    name: 'Bomba de Agua',
-    description: 'Bomba eficiente para mantener el flujo de agua en tu acuario.',
-    price: 49.99,
-    category: 'Bombas',
-    image: 'https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcTr93xVYUCzrhgZN7k8fJ9w_TTKxGFD3PCzemwsfQgZKjii7TLm9gSPjimXEtzOr4KlTets97Oe4x-rHnnc3Hy29EM1L0YDU5pqJuT-U9ZtrbIewVpQVRrZTQ&usqp=CAE',
-  },
-  {
-    id: '3',
-    name: 'Filtro Biológico',
-    description: 'Filtro que mantiene el agua limpia y libre de impurezas.',
-    price: 39.99,
-    category: 'Filtros',
-    image: 'https://via.placeholder.com/150',
-  },
-
-]
-
 const Productos: React.FC = () => {
+
   const [searchText, setSearchText] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const { products, loading } = useProducts();
   const pageSize = 6
 
-  // Filtrar productos según la búsqueda y la categoría seleccionada
-  const filteredProducts = mockProducts.filter((product) => {
-    const matchesSearch = product.name
+  // Filtrar productos según búsqueda y categoría
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch = product.nombre
       .toLowerCase()
       .includes(searchText.toLowerCase())
     const matchesCategory = selectedCategory
-      ? product.category === selectedCategory
+      ? product.categoria === selectedCategory
       : true
     return matchesSearch && matchesCategory
   })
 
   // Paginación
-  const paginatedProducts = filteredProducts.slice(
+  const productosPaginados = filteredProducts.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize
   )
 
-  const { loading } = useProducts();
-
   if (loading) {
     return (
-      //<Loader />
       <div>
-        <p>Cargando productos....</p>
+        <Loader />
       </div>
-    );
+    )
   }
 
   return (
     <div className="productos-page">
+    
       {/* Filtros y búsqueda */}
       <div className="filters-section">
         <Search
@@ -161,15 +72,21 @@ const Productos: React.FC = () => {
 
       {/* Listado de productos */}
       <Row gutter={[24, 24]} className="products-grid">
-        {paginatedProducts.map((product) => (
-          <Col xs={24} sm={12} md={8} key={product.id}>
+        {productosPaginados.map((product) => (
+          <Col xs={24} sm={12} md={8} key={product._id}>
             <Card
-              cover={<img src={product.image} alt={product.name} />}
+              cover={
+                <img
+                  src={product.imagen?.[0] || "https://via.placeholder.com/150"}
+                  loading="lazy" 
+                  alt={product.nombre}
+                />
+              }
               className="product-card"
             >
-              <h3>{product.name}</h3>
-              <p>{product.description}</p>
-              <p className="product-price">${product.price.toFixed(2)}</p>
+              <h3>{product.nombre}</h3>
+              <p>{product.descripcion}</p>
+              <p className="product-price">${product.precio.toFixed(2)}</p>
               <Button type="primary" block>
                 Ver detalles
               </Button>
