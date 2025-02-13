@@ -14,6 +14,7 @@ import Registro from "./pages/public/Auth/Register";
 import Contacto from "./pages/public/Contacto";
 import About from "./pages/public/About";
 import Verificacion from "./pages/public/Auth/Verfificacion";
+import NotFound from "./pages/public/NotFound";
 
 const AnimatedRoutes = () => {
   const location = useLocation(); // Detecta la ruta actual
@@ -56,7 +57,13 @@ const App: React.FC = () => {
       <AuthProvider>
 
         <AnimatedRoutes />
-
+    
+        {/* Ruta 404 */}
+        <Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        
+        
       </AuthProvider>
     </BrowserRouter>
   );
