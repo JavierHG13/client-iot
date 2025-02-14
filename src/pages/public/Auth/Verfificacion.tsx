@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Form, Input, Button, message, Typography } from "antd";
 import { MailOutlined } from "@ant-design/icons";
-import Loader from "../../../components/Common/Loader";
+//import Loader from "../../../components/Common/Loader";
 import './Verficacion.css'
 
 const { Title, Text } = Typography;

@@ -10,7 +10,7 @@ import {
     DashboardOutlined,
     ShoppingCartOutlined,
     MenuOutlined,
-    
+
 } from '@ant-design/icons'
 import './Header.css'
 
@@ -21,7 +21,7 @@ const Header: React.FC = () => {
 
 
     // Menú desplegable para el perfil del usuario
-    const profileMenu = user ? (
+    const profileMenu: React.ReactNode = user ? (
         <Menu>
             <Menu.Item>
                 <span className="user-name">{user.nombre} {user.apellidos}</span>
@@ -147,20 +147,18 @@ const Header: React.FC = () => {
 
                 {user ? (
                     <>
-                        <Dropdown overlay={profileMenu} trigger={['click']}>
+                        <Dropdown overlay={profileMenu ?? <div>No menu available</div>} trigger={['click']}>
+                            
                             <div className="profile-dropdown">
                                 <Avatar
                                     src={user.avatar}
                                     icon={<UserOutlined />}
                                     className="user-avatar"
                                 />
-                                {/*<span className="user-name">{user.name}</span>*/}
                                 {hasRole('admin') && <span className="role-badge">Admin</span>}
                             </div>
-                        </Dropdown >
+                        </Dropdown>
                     </>
-
-                    
                 ) : (
                     <NavLink
                         to="/login"
@@ -169,6 +167,7 @@ const Header: React.FC = () => {
                         Iniciar Sesión
                     </NavLink>
                 )}
+
 
                 {/* Menú hamburguesa (visible en pantallas pequeñas) */}
                 <Button

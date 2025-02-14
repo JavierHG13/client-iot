@@ -12,7 +12,7 @@ interface Mensaje {
 
 const Contacto: React.FC = () => {
     const [form] = Form.useForm()
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState<boolean>(false)
 
     const onFinish = async (values: Mensaje) => {
         try {
@@ -79,7 +79,7 @@ const Contacto: React.FC = () => {
                         </Form.Item>
 
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" block>
+                            <Button type="primary" htmlType="submit" loading={isLoading} block>
                                 Enviar mensaje
                             </Button>
                         </Form.Item>
